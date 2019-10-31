@@ -19,6 +19,7 @@
 .env.production.local
 .env
 now.json
+src/fakeData.js
 
 npm-debug.log*
 yarn-debug.log*
