@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import {
   Text,
@@ -8,10 +9,13 @@ import {
   TableCell,
   TransactionBadge,
   IdentityBadge,
+  useViewport,
+  theme,
 } from '@aragon/ui'
 import { useTransition, animated } from 'react-spring'
 import Spinner from '../Components/Spinner'
 import { fakeTransactInfo } from '../fakeData'
+import { GU } from '../utils'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -22,29 +26,45 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
+const AddressWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .trans-details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: ${GU}px;
+  }
+`
+
 const Transactions = () => {
   const [transactInfo, setTransactInfo] = useState(null)
   const [loading, setLoading] = useState(true)
-  // TODO: Implement loading failed states
   const [failed, setFailed] = useState(false)
+  const { id } = useParams()
+  const { above, breakpoints } = useViewport()
   useEffect(() => {
     async function loadBlockTransaction() {
       setLoading(true)
+      setFailed(false)
       setTimeout(() => {
         const filteredTransact = fakeTransactInfo.filter(
           transaction => transaction.to !== null
         )
         setTransactInfo(filteredTransact)
         setLoading(false)
+        setFailed(false)
       }, 500)
     }
     loadBlockTransaction()
   }, [])
+
   const transitions = useTransition(loading, null, {
     from: { position: 'absolute', opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
   })
+
   return transitions.map(({ item, _, props }) =>
     item ? (
       <animated.div style={{ ...props, width: '95%' }}>
@@ -59,29 +79,48 @@ const Transactions = () => {
           header={
             <TableRow>
               <TableHeader title="Transaction Hash" />
+              <TableHeader title="From / To" />
             </TableRow>
           }
         >
           {transactInfo.map(transaction => (
-            <TableRow key={transaction.hash}>
+            <TableRow key={transaction.blockNumber}>
               <TableCell>
-                <TransactionBadge shorten transaction={transaction.hash} />
+                <TransactionBadge
+                  shorten
+                  transaction={transaction.hash}
+                  fontSize="xxsmall"
+                />
               </TableCell>
               <TableCell>
-                <div>
-                  <div>
-                    <Text>From</Text>{' '}
-                    <IdentityBadge shorten entity={transaction.from} />
+                <AddressWrapper>
+                  <div className="trans-details">
+                    <Text smallcaps color={theme.textSecondary} weight="bold">
+                      From
+                    </Text>{' '}
+                    <IdentityBadge
+                      shorten
+                      entity={transaction.from}
+                      fontSize="xxsmall"
+                    />
                   </div>
-                  <div>
-                    <Text>To</Text>{' '}
-                    <IdentityBadge shorten entity={transaction.to} />
+                  <div className="trans-details">
+                    <Text smallcaps color={theme.textSecondary} weight="bold">
+                      To
+                    </Text>{' '}
+                    <IdentityBadge
+                      shorten
+                      entity={transaction.to}
+                      fontSize="xxsmall"
+                    />
                   </div>
-                </div>
+                </AddressWrapper>
               </TableCell>
-              <TableCell>
-                <Text>{transaction.value}</Text>
-              </TableCell>
+              {above(breakpoints.small) && (
+                <TableCell>
+                  <Text>{transaction.value}</Text>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </Table>

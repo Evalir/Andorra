@@ -11,7 +11,7 @@ const AppTabBar = () => {
         history.push('/')
         break
       case 1:
-        history.push('/transactions')
+        history.push('/transactions/:1')
         break
       default:
         throw new Error(

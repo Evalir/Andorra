@@ -17,13 +17,13 @@ const StyledLink = styled(Link)`
   color: ${theme.accent};
 `
 
-const AnimatedTable = ({ items, title, handleBlockClick }) => (
+const AnimatedTable = ({ items, title }) => (
   <Table
     header={
       <TableRow>
         <TableHeader title={title} />
         <TableHeader title={'Miner'} />
-        <TableHeader title={'Number of transactions'} />
+        <TableHeader title={'No. of transactions'} />
       </TableRow>
     }
   >
@@ -48,7 +48,6 @@ const AnimatedTable = ({ items, title, handleBlockClick }) => (
 AnimatedTable.propTypes = {
   title: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
-  handleBlockClick: PropTypes.func.isRequired,
 }
 
 export default AnimatedTable

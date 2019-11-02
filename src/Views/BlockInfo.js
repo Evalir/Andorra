@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import {
@@ -14,10 +14,6 @@ import { GU } from '../utils'
 import { fakeBlockInfo } from '../fakeData'
 import { ReactComponent as BlockSVG } from '../assets/block.svg'
 import history from '../history'
-
-const Wrapper = styled.div`
-  margin: 0 auto;
-`
 
 const StyledCard = styled(Card)`
   margin: 0 auto;
@@ -51,7 +47,7 @@ const BlockInfo = () => {
   const { id } = useParams()
   // TODO: Implement animations for loading
   return (
-    <Wrapper>
+    <Fragment>
       {!failed && (
         <StyledCard height="auto">
           <CardContent>
@@ -116,7 +112,7 @@ const BlockInfo = () => {
           icon={() => <IconError />}
         />
       )}
-    </Wrapper>
+    </Fragment>
   )
 }
 
