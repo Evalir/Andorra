@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@aragon/ui": "^1.0.0-alpha.32",
+    "@aragon/ui": "^0.40.2",
     "@sentry/browser": "^5.7.1",
     "prop-types": "^15.7.2",
+    "query-string": "^6.8.3",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-helmet": "^5.2.1",

@@ -1,4 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import {
   Table,
   TableHeader,
@@ -6,27 +9,36 @@ import {
   TableCell,
   Text,
   Badge,
+  theme,
 } from '@aragon/ui'
-import PropTypes from 'prop-types'
 
-const AnimatedTable = ({ items, title }) => (
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${theme.accent};
+`
+
+const AnimatedTable = ({ items, title, handleBlockClick }) => (
   <Table
     header={
       <TableRow>
         <TableHeader title={title} />
+        <TableHeader title={'Miner'} />
+        <TableHeader title={'Number of transactions'} />
       </TableRow>
     }
   >
     {items.map((item, index) => (
       <TableRow key={index}>
         <TableCell>
-          <Text>{item.number}</Text>
+          <StyledLink to={`/blockinfo/${item.number}`}>
+            {item.number}
+          </StyledLink>
         </TableCell>
         <TableCell>
           <Text>Miner {item.miner}</Text>
         </TableCell>
         <TableCell>
-          <Badge.Info>{item.reward} ETH</Badge.Info>
+          <Badge>{Math.floor(Math.random() * 300)} Transactions</Badge>
         </TableCell>
       </TableRow>
     ))}
@@ -36,6 +48,7 @@ const AnimatedTable = ({ items, title }) => (
 AnimatedTable.propTypes = {
   title: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
+  handleBlockClick: PropTypes.func.isRequired,
 }
 
 export default AnimatedTable
