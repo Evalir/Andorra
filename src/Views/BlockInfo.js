@@ -20,6 +20,10 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `
 
+const StyledCard = styled(Card)`
+  margin: 0 auto;
+`
+
 const StyledButton = styled(Button)`
   margin: ${GU}px 0 0 0;
 `
@@ -48,7 +52,7 @@ const BlockInfo = () => {
   return (
     <Wrapper>
       {!failed && (
-        <Card height="auto">
+        <StyledCard height="auto">
           <CardContent>
             <BlockSVG />
             <Text size="large">Block Information</Text>
@@ -102,7 +106,7 @@ const BlockInfo = () => {
               Go Back
             </StyledButton>
           </CardContent>
-        </Card>
+        </StyledCard>
       )}
       {failed && (
         <EmptyStateCard
