@@ -1,9 +1,8 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import styled from 'styled-components'
 import { Text, theme, Badge } from '@aragon/ui'
-import { useSpring, animated } from 'react-spring'
 import AnimatedTable from '../Components/AnimatedTable'
-import { fakeBlocks, fakeBlockInfo } from '../fakeData'
+import { fakeBlocks } from '../fakeData'
 import { GU } from '../utils'
 
 const Wrapper = styled.div`
@@ -32,38 +31,31 @@ const Wrapper = styled.div`
   }
 `
 
-const Index = () => {
-  const props = useSpring({
-    opacity: 1,
-    transform: `scale(1) translateY(0%)`,
-    from: { opacity: 0.5, transform: `scale(0.95) translateY(10%)` },
-  })
-  return (
-    <Fragment>
-      {/* <animated.div style={props}> */}
-      <Wrapper>
-        <div className="ether-info">
-          <AnimatedTable items={fakeBlocks} title="Block" />
+const Index = () => (
+  <Fragment>
+    {/* <animated.div style={props}> */}
+    <Wrapper>
+      <div className="ether-info">
+        <AnimatedTable items={fakeBlocks} title="Block" />
+      </div>
+      <div className="ether-info">
+        <Text.Block>Stats</Text.Block>
+        <div className="stat-row">
+          <Text size="small" color={theme.textSecondary}>
+            ETH Price:{' '}
+          </Text>{' '}
+          <Badge>$2323</Badge>
         </div>
-        <div className="ether-info">
-          <Text.Block>Stats</Text.Block>
-          <div className="stat-row">
-            <Text size="small" color={theme.textSecondary}>
-              ETH Price:{' '}
-            </Text>{' '}
-            <Badge>$2323</Badge>
-          </div>
-          <div className="stat-row">
-            <Text size="small" color={theme.textSecondary}>
-              Market Cap:{' '}
-            </Text>{' '}
-            <Badge>${Math.floor(Math.random() * 100000000)}</Badge>
-          </div>
+        <div className="stat-row">
+          <Text size="small" color={theme.textSecondary}>
+            Market Cap:{' '}
+          </Text>{' '}
+          <Badge>${Math.floor(Math.random() * 100000000)}</Badge>
         </div>
-      </Wrapper>
-      {/* </animated.div> */}
-    </Fragment>
-  )
-}
+      </div>
+    </Wrapper>
+    {/* </animated.div> */}
+  </Fragment>
+)
 
 export default Index
