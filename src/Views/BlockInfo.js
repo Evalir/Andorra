@@ -5,7 +5,6 @@ import {
   Card,
   EmptyStateCard,
   IconError,
-  IconHome,
   Text,
   Badge,
   theme,
@@ -46,9 +45,11 @@ const CardContent = styled.div`
 `
 
 const BlockInfo = () => {
+  // TODO: Implement loading and failed states
+  const [loading, setLoading] = useState(false)
   const [failed, setFailed] = useState(false)
   const { id } = useParams()
-  console.log('Got id', id)
+  // TODO: Implement animations for loading
   return (
     <Wrapper>
       {!failed && (
