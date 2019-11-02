@@ -40,28 +40,28 @@ const Index = () => {
   })
   return (
     <Fragment>
-      <animated.div style={props}>
-        <Wrapper>
-          <div className="ether-info">
-            <AnimatedTable items={fakeBlocks} title="Block" />
+      {/* <animated.div style={props}> */}
+      <Wrapper>
+        <div className="ether-info">
+          <AnimatedTable items={fakeBlocks} title="Block" />
+        </div>
+        <div className="ether-info">
+          <Text.Block>Stats</Text.Block>
+          <div className="stat-row">
+            <Text size="small" color={theme.textSecondary}>
+              ETH Price:{' '}
+            </Text>{' '}
+            <Badge>$2323</Badge>
           </div>
-          <div className="ether-info">
-            <Text.Block>Stats</Text.Block>
-            <div className="stat-row">
-              <Text size="small" color={theme.textSecondary}>
-                ETH Price:{' '}
-              </Text>{' '}
-              <Badge>$2323</Badge>
-            </div>
-            <div className="stat-row">
-              <Text size="small" color={theme.textSecondary}>
-                Market Cap:{' '}
-              </Text>{' '}
-              <Badge>${Math.floor(Math.random() * 100000000)}</Badge>
-            </div>
+          <div className="stat-row">
+            <Text size="small" color={theme.textSecondary}>
+              Market Cap:{' '}
+            </Text>{' '}
+            <Badge>${Math.floor(Math.random() * 100000000)}</Badge>
           </div>
-        </Wrapper>
-      </animated.div>
+        </div>
+      </Wrapper>
+      {/* </animated.div> */}
     </Fragment>
   )
 }
