@@ -5,6 +5,7 @@
   "dependencies": {
     "@aragon/ui": "^0.40.2",
     "@sentry/browser": "^5.7.1",
+    "lodash.range": "^3.2.0",
     "prop-types": "^15.7.2",
     "query-string": "^6.8.3",
     "react": "^16.11.0",
