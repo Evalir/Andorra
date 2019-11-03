@@ -53,10 +53,10 @@ const BlockInfo = () => {
     setLoading(true)
     setFailed(false)
     try {
-      const wsWeb3 = new Web3(
+      const web3 = new Web3(
         getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
       )
-      const block = await wsWeb3.eth.getBlock(id)
+      const block = await web3.eth.getBlock(id)
       setBlockData(block)
 
       setFailed(false)

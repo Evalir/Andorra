@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTransition, animated } from 'react-spring'
@@ -10,11 +10,14 @@ import {
   theme,
   TransactionBadge,
   IdentityBadge,
+  IconError,
+  EmptyStateCard,
 } from '@aragon/ui'
+import Web3 from 'web3'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import TransactionPNG from '../assets/transaction@3x.png'
-import { fakeTransactInfo } from '../fakeData'
 import { GU, fromWei } from '../utils'
+import { getInjectedProvider } from '../web3-utils'
 import history from '../history'
 
 const StyledCard = styled(Card)`
@@ -47,21 +50,30 @@ const TransactionInfo = () => {
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
   const { hash } = useParams()
-  useEffect(() => {
-    async function loadTransactionInfo() {
-      setLoading(true)
-      setFailed(false)
-      setTimeout(() => {
-        const filteredTransact = fakeTransactInfo.filter(
-          transaction => transaction.to !== null
-        )
-        setTransactInfo(filteredTransact[0])
-        setLoading(false)
+
+  const loadTransactionInfo = useCallback(async () => {
+    setLoading(true)
+    setFailed(false)
+    try {
+      const web3 = new Web3(
+        getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
+      )
+      const transaction = await web3.eth.getTransaction(hash)
+      if (!transaction) {
+        setFailed(true)
+      } else {
+        setTransactInfo(transaction)
         setFailed(false)
-      }, 500)
+      }
+    } catch (error) {
+      // handle error with retry
+      setFailed(true)
     }
+    setLoading(false)
+  }, [hash])
+  useEffect(() => {
     loadTransactionInfo()
-  }, [])
+  }, [loadTransactionInfo, hash])
 
   const transitions = useTransition(loading, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -71,10 +83,20 @@ const TransactionInfo = () => {
 
   function renderTransactionInfo(animationProps) {
     if (failed) {
-      // return meaningful error state.
+      return (
+        <SpinnerWrapper key={2}>
+          <EmptyStateCard
+            actionText="Try Again"
+            icon={() => <IconError />}
+            text="A problem ocurred while fetching the requested transaction."
+            onActivate={() => loadTransactionInfo()}
+            disabled={loading}
+          />
+        </SpinnerWrapper>
+      )
     }
     return (
-      <animated.div style={{ animationProps, width: '95%' }}>
+      <animated.div style={{ animationProps, width: '95%' }} key={2}>
         <StyledCard height="auto" width="300px">
           <CardContent>
             <img
@@ -84,7 +106,10 @@ const TransactionInfo = () => {
               height="64px"
             />
             <Text size="large">Transaction Information</Text>
-            <TransactionBadge transaction={transactInfo.hash} shorten />
+            <TransactionBadge
+              transaction={transactInfo && transactInfo.hash}
+              shorten
+            />
             <div className="block-stats">
               <div className="stat">
                 <Text smallcaps color={theme.textSecondary}>
@@ -92,7 +117,7 @@ const TransactionInfo = () => {
                 </Text>
               </div>
               <div className="stat">
-                <IdentityBadge entity={transactInfo.from} />
+                <IdentityBadge entity={transactInfo && transactInfo.from} />
               </div>
               <div className="stat">
                 <Text smallcaps color={theme.textSecondary}>
@@ -100,7 +125,10 @@ const TransactionInfo = () => {
                 </Text>
               </div>
               <div className="stat">
-                <IdentityBadge entity={transactInfo.to} shorten />
+                <IdentityBadge
+                  entity={transactInfo && transactInfo.to}
+                  shorten
+                />
               </div>
               <div className="stat">
                 <Text smallcaps color={theme.textSecondary}>
@@ -109,7 +137,7 @@ const TransactionInfo = () => {
               </div>
               <div className="stat">
                 <Badge>
-                  {transactInfo.transactionIndex !== null
+                  {transactInfo && transactInfo.transactionIndex !== null
                     ? transactInfo.gas === transactInfo.gasPrice
                       ? 'Failed'
                       : 'Success'
@@ -122,15 +150,7 @@ const TransactionInfo = () => {
                 </Text>
               </div>
               <div className="stat">
-                <Badge>{fromWei(transactInfo.value)}</Badge>
-              </div>
-              <div className="stat">
-                <Text smallcaps color={theme.textSecondary}>
-                  Gas provided
-                </Text>
-              </div>
-              <div className="stat">
-                <Badge>{transactInfo.gas}</Badge>
+                <Badge>{transactInfo && fromWei(transactInfo.value)}</Badge>
               </div>
               <div className="stat">
                 <Text smallcaps color={theme.textSecondary}>
@@ -138,7 +158,15 @@ const TransactionInfo = () => {
                 </Text>
               </div>
               <div className="stat">
-                <Badge>{transactInfo.gasPrice}</Badge>
+                <Badge>{transactInfo && transactInfo.gas}</Badge>
+              </div>
+              <div className="stat">
+                <Text smallcaps color={theme.textSecondary}>
+                  From Block
+                </Text>
+              </div>
+              <div className="stat">
+                <Badge>{transactInfo.blockNumber}</Badge>
               </div>
             </div>
 
@@ -157,7 +185,7 @@ const TransactionInfo = () => {
 
   return transitions.map(({ item: isLoading, key, props }) =>
     isLoading ? (
-      <animated.div style={{ ...props, width: '95%' }}>
+      <animated.div style={{ ...props, width: '95%' }} key={1}>
         <SpinnerWrapper>
           <Spinner />
         </SpinnerWrapper>
