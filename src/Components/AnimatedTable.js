@@ -38,7 +38,7 @@ const AnimatedTable = ({ items, title }) => (
           <Text>Miner {item.miner}</Text>
         </TableCell>
         <TableCell>
-          <Badge>{Math.floor(Math.random() * 300)} Transactions</Badge>
+          <Badge>{item.transactions.length} Transactions</Badge>
         </TableCell>
       </TableRow>
     ))}
