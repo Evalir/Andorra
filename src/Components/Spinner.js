@@ -10,6 +10,15 @@ const donutSpin = keyframes`
   }
 `
 
+export const SpinnerWrapper = styled.div`
+  width: 100%;
+  min-height: calc(100vh - 130px);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const Spinner = styled.div`
   display: block;
   border: 4px solid rgba(0, 0, 0, 0.1);

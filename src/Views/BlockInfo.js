@@ -12,7 +12,7 @@ import {
 } from '@aragon/ui'
 import { GU } from '../utils'
 import { fakeBlockInfo } from '../fakeData'
-import { ReactComponent as BlockSVG } from '../assets/block.svg'
+import BlockPNG from '../assets/block@3x.png'
 import history from '../history'
 
 const StyledCard = styled(Card)`
@@ -46,12 +46,13 @@ const BlockInfo = () => {
   const [failed, setFailed] = useState(false)
   const { id } = useParams()
   // TODO: Implement animations for loading
+
   return (
     <Fragment>
       {!failed && (
         <StyledCard height="auto">
           <CardContent>
-            <BlockSVG />
+            <img src={BlockPNG} alt="Blue block" width="64px" height="64px" />
             <Text size="large">Block Information</Text>
             <Badge>{Number(id) + 800452}</Badge>
             <div className="block-stats">
@@ -86,6 +87,14 @@ const BlockInfo = () => {
               </div>
               <div className="stat">
                 <Badge>{fakeBlockInfo.difficulty}</Badge>
+              </div>
+              <div className="stat">
+                <Text smallcaps color={theme.textSecondary}>
+                  Block Reward
+                </Text>
+              </div>
+              <div className="stat">
+                <Badge>{fakeBlockInfo.blockReward}</Badge>
               </div>
             </div>
             <StyledButton
