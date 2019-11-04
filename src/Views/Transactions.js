@@ -15,8 +15,10 @@ import {
 } from '@aragon/ui'
 import Web3 from 'web3'
 import { useTransition, animated } from 'react-spring'
+
 import Tag from '../Components/Tag'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
+
 import { getInjectedProvider } from '../web3-utils'
 import { fromWei, GU } from '../utils'
 
@@ -32,7 +34,7 @@ const AddressWrapper = styled.div`
 `
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState(null)
+  const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
   const { id } = useParams()
@@ -45,7 +47,13 @@ const Transactions = () => {
       const web3 = new Web3(
         getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
       )
-      const block = await web3.eth.getBlock(id, true)
+      let block
+      if (id === '-1') {
+        const lastBlockNumber = await web3.eth.getBlockNumber()
+        block = await web3.eth.getBlock(lastBlockNumber, true)
+      } else {
+        block = await web3.eth.getBlock(id, true)
+      }
       const { transactions } = block
       const fetchedTransactions = transactions.filter(
         transaction => transaction.value > 0 && transaction.to !== null

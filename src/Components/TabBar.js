@@ -12,7 +12,7 @@ const AppTabBar = () => {
         break
       case 1:
         // replace this one with the latest block available
-        history.push('/transactions/1')
+        history.push('/transactions/-1')
         break
       default:
         throw new Error(
