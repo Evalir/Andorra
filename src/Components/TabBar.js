@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { TabBar, Button } from '@aragon/ui'
+import { TabBar } from '@aragon/ui'
 import history from '../history'
 
 const AppTabBar = () => {
@@ -40,7 +40,6 @@ const AppTabBar = () => {
   return (
     <TabBar
       items={['Blocks', 'Transactions']}
-      endContent={<Button>See the code</Button>}
       selected={selected}
       onChange={handleTabChange}
     />

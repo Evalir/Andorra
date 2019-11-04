@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
   color: ${theme.accent};
 `
 
-const AnimatedTable = ({ items, title }) => {
+const BlocksTable = ({ items, title }) => {
   const { above, breakpoints } = useViewport()
   return (
     <Table
@@ -53,9 +53,9 @@ const AnimatedTable = ({ items, title }) => {
   )
 }
 
-AnimatedTable.propTypes = {
+BlocksTable.propTypes = {
   title: PropTypes.string.isRequired,
   items: PropTypes.array.isRequired,
 }
 
-export default AnimatedTable
+export default BlocksTable

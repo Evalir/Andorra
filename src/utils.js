@@ -8,7 +8,7 @@ export const GU = 8
  * @param {number} wei Value in wei.
  * @returns {number} wei converted to ether.
  */
-export const fromWei = wei => wei / 1000000000000000000
+export const toEther = wei => wei / 1000000000000000000
 
 /**
  * Shorten an Ethereum address. `charsLength` allows to change the number of

@@ -20,7 +20,7 @@ import Tag from '../Components/Tag'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 
 import { getInjectedProvider } from '../web3-utils'
-import { fromWei, GU } from '../utils'
+import { toEther, GU } from '../utils'
 
 const AddressWrapper = styled.div`
   width: 100%;
@@ -146,7 +146,7 @@ const Transactions = () => {
                 </TableCell>
                 {above(breakpoints.small) && (
                   <TableCell>
-                    <Text smallcaps>$ {fromWei(transaction.value)}</Text>
+                    <Text smallcaps>$ {toEther(transaction.value)}</Text>
                   </TableCell>
                 )}
               </TableRow>

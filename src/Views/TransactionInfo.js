@@ -16,7 +16,7 @@ import {
 import Web3 from 'web3'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import TransactionPNG from '../assets/transaction@3x.png'
-import { GU, fromWei } from '../utils'
+import { GU, toEther } from '../utils'
 import { getInjectedProvider } from '../web3-utils'
 import history from '../history'
 
@@ -150,7 +150,7 @@ const TransactionInfo = () => {
                 </Text>
               </div>
               <div className="stat">
-                <Badge>{transactInfo && fromWei(transactInfo.value)}</Badge>
+                <Badge>{transactInfo && toEther(transactInfo.value)}</Badge>
               </div>
               <div className="stat">
                 <Text smallcaps color={theme.textSecondary}>
