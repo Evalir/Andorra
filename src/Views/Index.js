@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
-import { Text, theme, Badge, EmptyStateCard, IconError } from '@aragon/ui'
+import 'styled-components/macro'
+import {
+  Text,
+  theme,
+  Badge,
+  EmptyStateCard,
+  IconError,
+  TextInput,
+} from '@aragon/ui'
 import Web3 from 'web3'
-import AnimatedTable from '../Components/AnimatedTable'
-
 import { useTransition, animated } from 'react-spring'
+
+import AnimatedTable from '../Components/AnimatedTable'
 import Switch from '../Components/Switch'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import { GU } from '../utils'
 import { getInjectedProvider, fetchBlocks } from '../web3-utils'
-
-const RealtimeSwitchWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-`
+import history from '../history'
 
 const Wrapper = styled.div`
   position: relative;
@@ -45,12 +46,15 @@ const Wrapper = styled.div`
 `
 
 const Index = () => {
-  const [realtime, setRealtime] = useState(false)
   const [lastBlockNumber, setLastBlockNumber] = useState(null)
   const [blocks, setBlocks] = useState([])
+  const [inputBlockNumber, setInputBlockNumber] = useState('')
+  const [realtime, setRealtime] = useState(false)
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
-  const ref = useRef()
+  const subscriptionRef = useRef()
+
+  // Fetch the last block number on the blockchain.
   const fetchBlockNumber = useCallback(async () => {
     setLoading(true)
     try {
@@ -69,6 +73,7 @@ const Index = () => {
     fetchBlockNumber()
   }, [fetchBlockNumber])
 
+  // Effect for running real time updates
   useEffect(() => {
     if (realtime && lastBlockNumber) {
       try {
@@ -84,23 +89,25 @@ const Index = () => {
             setLastBlockNumber(newBlock.number)
           }
         )
-        ref.current = subscription
+        subscriptionRef.current = subscription
       } catch (e) {
         console.log(e)
       }
     }
-    return () =>
-      ref.current
-        ? ref.current.unsubscribe((err, success) => {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log('success!', success)
-            }
-          })
-        : undefined
+    return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe((err, result) => {
+          if (err) {
+            // handle error
+            console.log(err)
+          }
+        })
+        subscriptionRef.current = null
+      }
+    }
   }, [lastBlockNumber, realtime])
 
+  // Fetch the last 10 blocks from the blockchain
   useEffect(() => {
     async function fetchRequestedBlocks() {
       if (lastBlockNumber) {
@@ -123,6 +130,11 @@ const Index = () => {
     }
     fetchRequestedBlocks()
   }, [lastBlockNumber])
+
+  function searchBlockByNumber() {
+    // navigate to blockinfo
+    history.push(`/blockInfo/${inputBlockNumber}`)
+  }
 
   const transitions = useTransition(loading, null, {
     from: { position: 'absolute', opacity: 0 },
@@ -147,7 +159,15 @@ const Index = () => {
 
     return (
       <animated.div style={{ ...animationProps, width: '95%' }} key={2}>
-        <RealtimeSwitchWrapper>
+        <div
+          css={`
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+          `}
+        >
           <Text smallcaps>realtime updates</Text>
           <Switch
             onChange={() => {
@@ -155,7 +175,20 @@ const Index = () => {
             }}
             on={realtime}
           />
-        </RealtimeSwitchWrapper>
+        </div>
+        <TextInput
+          wide
+          type="search"
+          onChange={e => setInputBlockNumber(e.target.value)}
+          onKeyDown={e => {
+            if (e.keyCode === 13) {
+              searchBlockByNumber()
+            }
+          }}
+          css={`
+            margin-top: 24px;
+          `}
+        />
         <Wrapper>
           <div className="ether-info">
             <AnimatedTable items={blocks} title="Block" />

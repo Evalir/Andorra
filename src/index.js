@@ -11,6 +11,7 @@ Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
 })
 
+// eslint-disable-next-line react/prop-types
 const Provider = ({ children }) => (
   <Main>
     <AppView appBar={<AppBar title="Andorra" tabs={<TabBar />} />}>
