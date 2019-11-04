@@ -12,7 +12,7 @@ import {
 import Web3 from 'web3'
 import { useTransition, animated } from 'react-spring'
 
-import AnimatedTable from '../Components/AnimatedTable'
+import BlocksTable from '../Components/BlocksTable'
 import Switch from '../Components/Switch'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import { GU } from '../utils'
@@ -52,6 +52,10 @@ const Index = () => {
   const [realtime, setRealtime] = useState(false)
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
+  const [totalDifficulty, setTotalDifficulty] = useState(null)
+  const [totalGasUsed, setTotalGasUsed] = useState(null)
+  const [averageDifficulty, setAverageDifficulty] = useState(null)
+  const [averageGasUsed, setAverageGasUsed] = useState(null)
   const subscriptionRef = useRef()
 
   // Fetch the last block number on the blockchain.
@@ -86,7 +90,9 @@ const Index = () => {
             if (err) {
               // do stuff
             }
-            setLastBlockNumber(newBlock.number)
+            if (realtime) {
+              setLastBlockNumber(newBlock.number)
+            }
           }
         )
         subscriptionRef.current = subscription
@@ -131,8 +137,28 @@ const Index = () => {
     fetchRequestedBlocks()
   }, [lastBlockNumber])
 
+  // Calculate avg difficulty and gas used
+  useEffect(() => {
+    if (blocks.length > 0) {
+      const totDifficulty = blocks.reduce(
+        (total, currentBlock) => total + Number(currentBlock.difficulty),
+        0
+      )
+      setTotalDifficulty(totDifficulty)
+      const averageDifficulty = totDifficulty / blocks.length
+      setAverageDifficulty(averageDifficulty)
+
+      const totGasUsed = blocks.reduce(
+        (total, currentBlock) => total + Number(currentBlock.gasUsed),
+        0
+      )
+      setTotalGasUsed(totGasUsed)
+      const averageGasUsed = totGasUsed / blocks.length
+      setAverageGasUsed(averageGasUsed)
+    }
+  }, [blocks])
+
   function searchBlockByNumber() {
-    // navigate to blockinfo
     history.push(`/blockInfo/${inputBlockNumber}`)
   }
 
@@ -191,21 +217,35 @@ const Index = () => {
         />
         <Wrapper>
           <div className="ether-info">
-            <AnimatedTable items={blocks} title="Block" />
+            <BlocksTable items={blocks} title="Block" />
           </div>
           <div className="ether-info">
-            <Text.Block>Stats</Text.Block>
+            <Text smallcaps weight="bold">
+              Stats for the last 10 blocks
+            </Text>
             <div className="stat-row">
               <Text size="small" color={theme.textSecondary}>
-                ETH Price:{' '}
-              </Text>{' '}
-              <Badge>$2323</Badge>
+                Total Difficulty:{' '}
+              </Text>
+              <Badge>{totalDifficulty}</Badge>
             </div>
             <div className="stat-row">
               <Text size="small" color={theme.textSecondary}>
-                Market Cap:{' '}
-              </Text>{' '}
-              <Badge>${Math.floor(Math.random() * 100000000)}</Badge>
+                Average Difficulty:{' '}
+              </Text>
+              <Badge>{averageDifficulty}</Badge>
+            </div>
+            <div className="stat-row">
+              <Text size="small" color={theme.textSecondary}>
+                Total Gas Used:{' '}
+              </Text>
+              <Badge>{totalGasUsed}</Badge>
+            </div>
+            <div className="stat-row">
+              <Text size="small" color={theme.textSecondary}>
+                Average Gas Used:{' '}
+              </Text>
+              <Badge>{averageGasUsed}</Badge>
             </div>
           </div>
         </Wrapper>
