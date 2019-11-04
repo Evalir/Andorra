@@ -1,13 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { Text, theme, Badge, EmptyStateCard, IconError } from '@aragon/ui'
 import Web3 from 'web3'
 import AnimatedTable from '../Components/AnimatedTable'
 
 import { useTransition, animated } from 'react-spring'
+import Switch from '../Components/Switch'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import { GU } from '../utils'
 import { getInjectedProvider, fetchBlocks } from '../web3-utils'
+
+const RealtimeSwitchWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+`
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,11 +45,12 @@ const Wrapper = styled.div`
 `
 
 const Index = () => {
+  const [realtime, setRealtime] = useState(false)
   const [lastBlockNumber, setLastBlockNumber] = useState(null)
   const [blocks, setBlocks] = useState([])
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
-
+  const ref = useRef()
   const fetchBlockNumber = useCallback(async () => {
     setLoading(true)
     try {
@@ -60,18 +70,50 @@ const Index = () => {
   }, [fetchBlockNumber])
 
   useEffect(() => {
+    if (realtime && lastBlockNumber) {
+      try {
+        const web3 = new Web3(
+          getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
+        )
+        const subscription = web3.eth.subscribe(
+          'newBlockHeaders',
+          async (err, newBlock) => {
+            if (err) {
+              // do stuff
+            }
+            setLastBlockNumber(newBlock.number)
+          }
+        )
+        ref.current = subscription
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    return () =>
+      ref.current
+        ? ref.current.unsubscribe((err, success) => {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log('success!', success)
+            }
+          })
+        : undefined
+  }, [lastBlockNumber, realtime])
+
+  useEffect(() => {
     async function fetchRequestedBlocks() {
       if (lastBlockNumber) {
         try {
           const web3 = new Web3(
             getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
           )
-          const blocks = await fetchBlocks(
+          let blocks = await fetchBlocks(
             web3,
             lastBlockNumber - 10,
             lastBlockNumber
           )
-          console.log(blocks)
+          blocks = blocks.reverse()
           setBlocks(blocks)
         } catch (error) {
           setFailed(true)
@@ -105,7 +147,15 @@ const Index = () => {
 
     return (
       <animated.div style={{ ...animationProps, width: '95%' }} key={2}>
-        {/* <animated.div style={props}> */}
+        <RealtimeSwitchWrapper>
+          <Text smallcaps>realtime updates</Text>
+          <Switch
+            onChange={() => {
+              setRealtime(on => !on)
+            }}
+            on={realtime}
+          />
+        </RealtimeSwitchWrapper>
         <Wrapper>
           <div className="ether-info">
             <AnimatedTable items={blocks} title="Block" />
