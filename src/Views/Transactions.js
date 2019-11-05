@@ -35,9 +35,9 @@ const AddressWrapper = styled.div`
 `
 
 const Transactions = () => {
-  const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [failed, setFailed] = useState(false)
+  const [transactions, setTransactions] = useState([])
   const { id } = useParams()
   const { above, breakpoints } = useViewport()
 
@@ -50,6 +50,7 @@ const Transactions = () => {
         getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
       )
       let block
+      // if the id is -1, we need to fetch the last block as we came through the transactions tab.
       if (id === '-1') {
         const lastBlockNumber = await web3.eth.getBlockNumber()
         block = await web3.eth.getBlock(lastBlockNumber, true)
@@ -62,8 +63,7 @@ const Transactions = () => {
         transaction => transaction.value > 0 && transaction.to !== null
       )
       setTransactions(fetchedTransactions)
-    } catch (e) {
-      // catch error state
+    } catch (error) {
       setFailed(true)
     }
     setLoading(false)

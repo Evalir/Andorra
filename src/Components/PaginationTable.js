@@ -116,7 +116,7 @@ PaginationTable.propTypes = {
   header: PropTypes.node.isRequired,
   items: PropTypes.array.isRequired,
   perPage: PropTypes.number,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.func.isRequired,
 }
 
 export default PaginationTable
