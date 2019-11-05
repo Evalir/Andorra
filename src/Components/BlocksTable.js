@@ -26,9 +26,7 @@ const BlocksTable = ({ items, title }) => {
         <TableRow>
           <TableHeader title={title} />
           <TableHeader title={'Miner'} />
-          {above(breakpoints.small) && (
-            <TableHeader title={'No. of transactions'} />
-          )}
+          {above(breakpoints.small) && <TableHeader title={'Gas Used'} />}
         </TableRow>
       }
     >
@@ -44,7 +42,7 @@ const BlocksTable = ({ items, title }) => {
           </TableCell>
           {above(breakpoints.small) && (
             <TableCell>
-              <Badge>{item.transactions.length} Transactions</Badge>
+              <Badge>{item.gasUsed}</Badge>
             </TableCell>
           )}
         </TableRow>

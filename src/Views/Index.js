@@ -46,12 +46,12 @@ const Wrapper = styled.div`
 `
 
 const Index = () => {
+  const [loading, setLoading] = useState(true)
+  const [failed, setFailed] = useState(false)
   const [lastBlockNumber, setLastBlockNumber] = useState(null)
   const [blocks, setBlocks] = useState([])
   const [inputBlockNumber, setInputBlockNumber] = useState('')
   const [realtime, setRealtime] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [failed, setFailed] = useState(false)
   const [totalDifficulty, setTotalDifficulty] = useState(null)
   const [totalGasUsed, setTotalGasUsed] = useState(null)
   const [averageDifficulty, setAverageDifficulty] = useState(null)
@@ -68,7 +68,6 @@ const Index = () => {
       const blockNumber = await web3.eth.getBlockNumber()
       setLastBlockNumber(blockNumber)
     } catch (error) {
-      // handle error with retry
       setFailed(true)
     }
   }, [])
@@ -100,6 +99,7 @@ const Index = () => {
         console.log(e)
       }
     }
+    // clean up function to avoid open subscriptions on unmount
     return () => {
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe((err, result) => {
@@ -250,7 +250,6 @@ const Index = () => {
             </div>
           </div>
         </Wrapper>
-        {/* </animated.div> */}
       </animated.div>
     )
   }

@@ -5,7 +5,8 @@ import { EmptyStateCard, IconError } from '@aragon/ui'
 
 const Wrapper = styled.div`
   display: flex;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   align-items: center;
   justify-content: center;
 `
