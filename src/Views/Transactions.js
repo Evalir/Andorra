@@ -1,29 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import 'styled-components/macro'
 import {
   Text,
-  Table,
-  TableRow,
-  TableHeader,
-  TableCell,
   IdentityBadge,
-  useViewport,
-  theme,
   EmptyStateCard,
   IconError,
+  TableHeader,
+  TableRow,
+  TableCell,
+  theme,
+  useViewport,
 } from '@aragon/ui'
 import Web3 from 'web3'
 import { useTransition, animated } from 'react-spring'
 
 import Tag from '../Components/Tag'
+import PaginationTable from '../Components/PaginationTable'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
-
+import { GU, toEther } from '../utils'
 import { getInjectedProvider } from '../web3-utils'
-import { toEther, GU } from '../utils'
 
 const AddressWrapper = styled.div`
   width: 100%;
+  max-width: 200px;
   display: flex;
   flex-direction: column;
   .trans-details {
@@ -40,6 +41,7 @@ const Transactions = () => {
   const { id } = useParams()
   const { above, breakpoints } = useViewport()
 
+  // Fetch transactions for the corresponding block
   const fetchTransactionsFromBlock = useCallback(async () => {
     setLoading(true)
     setFailed(false)
@@ -55,6 +57,7 @@ const Transactions = () => {
         block = await web3.eth.getBlock(id, true)
       }
       const { transactions } = block
+      // Filter only ethereum transfers
       const fetchedTransactions = transactions.filter(
         transaction => transaction.value > 0 && transaction.to !== null
       )
@@ -93,25 +96,30 @@ const Transactions = () => {
     }
     return (
       <animated.div style={{ animationProps, width: '95%' }} key={2}>
-        <Text size="xlarge">Latest Transactions</Text>
-        {transactions.length === 0 && (
-          <div>
-            <Text smallcaps>No transactions to show</Text>
-          </div>
-        )}
-        {transactions.length > 0 && (
-          <Table
-            header={
-              <TableRow>
-                <TableHeader title="Transaction Hash" />
-                <TableHeader title="From / To" />
-                {above(breakpoints.small) && (
-                  <TableHeader title="Value in Eth" />
-                )}
-              </TableRow>
-            }
-          >
-            {transactions.map(transaction => (
+        {/* Put stuff here */}
+        <div
+          css={`
+            margin-bottom: ${GU * 2}px;
+          `}
+        >
+          <Text size="xlarge">
+            {id === '-1'
+              ? 'Latest Transactions'
+              : `Transactions from block ${id}`}
+          </Text>
+        </div>
+        <PaginationTable
+          items={transactions}
+          header={
+            <TableRow>
+              <TableHeader title="Transaction Hash" />
+              <TableHeader title="From / To" />
+              {above(breakpoints.small) && <TableHeader title="Value in Eth" />}
+            </TableRow>
+          }
+        >
+          {paginatedItems =>
+            paginatedItems.map(transaction => (
               <TableRow key={transaction.hash}>
                 <TableCell>
                   <Tag
@@ -146,13 +154,16 @@ const Transactions = () => {
                 </TableCell>
                 {above(breakpoints.small) && (
                   <TableCell>
-                    <Text smallcaps>$ {toEther(transaction.value)}</Text>
+                    <Text smallcaps>
+                      $ {toEther(transaction.value).toFixed(2)}
+                    </Text>
                   </TableCell>
                 )}
               </TableRow>
-            ))}
-          </Table>
-        )}
+            ))
+          }
+        </PaginationTable>
+        {/* <TransactionsTable transactions={shownTransactions} /> */}
       </animated.div>
     )
   }
