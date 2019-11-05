@@ -8,6 +8,7 @@ import {
   EmptyStateCard,
   IconError,
   TextInput,
+  useViewport,
 } from '@aragon/ui'
 import Web3 from 'web3'
 import { useTransition, animated } from 'react-spring'
@@ -21,24 +22,26 @@ import history from '../history'
 
 const Wrapper = styled.div`
   position: relative;
-  width: 90%;
+  width: 100%;
+  margin: 0 auto;
   height: 100%;
   padding-top: 2em;
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 2em;
-
+  grid-gap: ${4 * GU}px;
   .ether-info {
     grid-column: span 1;
     .stat-row {
       width: 100%;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin: 0 0 ${GU}px 0;
     }
   }
   @media screen and (min-width: 728px) {
     grid-template-columns: 70% 1fr;
+
     .search {
       grid-column: span 2;
     }
@@ -57,6 +60,7 @@ const Index = () => {
   const [averageDifficulty, setAverageDifficulty] = useState(null)
   const [averageGasUsed, setAverageGasUsed] = useState(null)
   const subscriptionRef = useRef()
+  const { above, breakpoints } = useViewport()
 
   // Fetch the last block number on the blockchain.
   const fetchBlockNumber = useCallback(async () => {
@@ -196,10 +200,19 @@ const Index = () => {
     }
 
     return (
-      <animated.div style={{ ...animationProps, width: '95%' }} key={2}>
+      <animated.div
+        style={{
+          ...animationProps,
+          width: `${above(breakpoints.small) ? '100%' : '90%'}`,
+          margin: '0 auto',
+          paddingLeft: '-16px',
+        }}
+        key={2}
+      >
         <div
           css={`
-            width: 100%;
+            width: ${above(breakpoints.small) ? '100%' : '90%'};
+            margin: 0 auto;
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -238,15 +251,27 @@ const Index = () => {
             </Text>
             <div className="stat-row">
               <Text size="small" color={theme.textSecondary}>
-                Total Difficulty:{' '}
+                Tot. Difficulty:{' '}
               </Text>
-              <Badge>{totalDifficulty}</Badge>
+              <Badge
+                css={`
+                  max-height: 22px;
+                `}
+              >
+                {totalDifficulty}
+              </Badge>
             </div>
             <div className="stat-row">
               <Text size="small" color={theme.textSecondary}>
-                Average Difficulty:{' '}
+                Avg Difficulty:{' '}
               </Text>
-              <Badge>{averageDifficulty}</Badge>
+              <Badge
+                css={`
+                  max-height: 22px;
+                `}
+              >
+                {averageDifficulty}
+              </Badge>
             </div>
             <div className="stat-row">
               <Text size="small" color={theme.textSecondary}>
