@@ -78,7 +78,7 @@ const Index = () => {
 
   // Effect for running real time updates
   useEffect(() => {
-    if (realtime && lastBlockNumber) {
+    if (realtime && lastBlockNumber && !subscriptionRef.current) {
       try {
         const web3 = new Web3(
           getInjectedProvider() || process.env.REACT_APP_INFURA_WS_ENDPOINT
@@ -87,7 +87,7 @@ const Index = () => {
           'newBlockHeaders',
           async (err, newBlock) => {
             if (err) {
-              // do stuff
+              setFailed(true)
             }
             if (realtime) {
               setLastBlockNumber(newBlock.number)
@@ -96,7 +96,7 @@ const Index = () => {
         )
         subscriptionRef.current = subscription
       } catch (e) {
-        console.log(e)
+        setFailed(true)
       }
     }
     // clean up function to avoid open subscriptions on unmount
@@ -105,13 +105,25 @@ const Index = () => {
         subscriptionRef.current.unsubscribe((err, result) => {
           if (err) {
             // handle error
-            console.log(err)
+            setFailed(true)
           }
         })
-        subscriptionRef.current = null
       }
     }
   }, [lastBlockNumber, realtime])
+
+  // force unsubscribe when realtime is set off
+  useEffect(() => {
+    if (!realtime && subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe((err, result) => {
+        if (err) {
+          // handle error
+          setFailed(true)
+        }
+      })
+      subscriptionRef.current = null
+    }
+  }, [realtime])
 
   // Fetch the last 10 blocks from the blockchain
   useEffect(() => {
