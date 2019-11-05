@@ -32,9 +32,7 @@ export function shortenAddress(address, charsLength = 4) {
   if (address.length < charsLength * 2 + prefixLength) {
     return address
   }
-  return (
-    address.slice(0, charsLength + prefixLength) +
-    '…' +
-    address.slice(-charsLength)
-  )
+  return `${address.slice(0, charsLength + prefixLength)}…${address.slice(
+    -charsLength
+  )}`
 }

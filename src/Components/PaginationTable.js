@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { Text, Table, Button } from '@aragon/ui'
 
-import { GU } from '../utils'
+import { GU } from '../utils/utils'
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -13,7 +13,9 @@ const PaginationWrapper = styled.div`
   margin-bottom: ${GU}px;
 `
 
-const PaginationTable = ({ header, items, perPage = 10, children }) => {
+const PER_PAGE = 10
+
+const PaginationTable = ({ header, items, children }) => {
   const [paginatedItems, setPaginatedItems] = useState([])
   const [paginationStart, setPaginationStart] = useState(1)
   const [paginationEnd, setPaginationEnd] = useState(10)
@@ -22,13 +24,14 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
   // Pagination logic
   useEffect(() => {
     // if there are more than 10 transactions, calculate the corresponding position, otherwise, assign the array length
-    let paginationEnd = items.length > 10 ? currentPage * perPage : items.length
+    let paginationEnd =
+      items.length > 10 ? currentPage * PER_PAGE : items.length
     // if paginationEnd is bigger than the items array, assign the array length
     if (paginationEnd > items.length) {
       paginationEnd = items.length
     }
     // if there are ten items or less, pagination start will always be one
-    let paginationStart = items.length > 10 ? paginationEnd - perPage + 1 : 1
+    let paginationStart = items.length > 10 ? paginationEnd - PER_PAGE + 1 : 1
     // if we are at the end of the array, we only wanna show the remaining items, not necessarily 10
     if (paginationEnd === items.length) {
       const remaining = paginationEnd % 10
@@ -43,7 +46,7 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
     }
     setPaginationStart(paginationStart)
     setPaginationEnd(paginationEnd)
-  }, [currentPage, items.length, perPage])
+  }, [currentPage, items.length])
 
   // pick the corresponding items for the array
   useEffect(() => {
@@ -60,7 +63,7 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
       {items.length > 0 && (
         <>
           <PaginationWrapper>
-            <Text smallcaps>
+            <Text smallcaps data-testid="pagination-text">
               {paginationStart} - {paginationEnd} out of {items.length}
             </Text>
             <div>
@@ -70,6 +73,7 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
                 `}
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
+                data-testid="start-button"
               >
                 <u>&lt;</u>
               </Button>
@@ -79,26 +83,29 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
                 `}
                 onClick={() => setCurrentPage(page => page - 1)}
                 disabled={currentPage === 1}
+                data-testid="back-button"
               >
                 &lt;
               </Button>
               <Button
                 onClick={() => setCurrentPage(page => page + 1)}
                 disabled={paginationEnd === items.length}
+                data-testid="next-button"
               >
                 &gt;
               </Button>
               <Button
                 onClick={() =>
                   setCurrentPage(() => {
-                    let lastPage = Math.floor(items.length / perPage)
-                    if (items.length % perPage !== 0) {
+                    let lastPage = Math.floor(items.length / PER_PAGE)
+                    if (items.length % PER_PAGE !== 0) {
                       lastPage++
                     }
                     return lastPage
                   })
                 }
                 disabled={paginationEnd === items.length}
+                data-testid="end-button"
               >
                 <u> &gt;</u>
               </Button>
@@ -115,7 +122,6 @@ const PaginationTable = ({ header, items, perPage = 10, children }) => {
 PaginationTable.propTypes = {
   header: PropTypes.node.isRequired,
   items: PropTypes.array.isRequired,
-  perPage: PropTypes.number,
   children: PropTypes.func.isRequired,
 }
 

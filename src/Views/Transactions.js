@@ -16,11 +16,11 @@ import {
 import Web3 from 'web3'
 import { useTransition, animated } from 'react-spring'
 
-import Tag from '../Components/Tag'
+import TagLink from '../Components/TagLink'
 import PaginationTable from '../Components/PaginationTable'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
-import { GU, toEther } from '../utils'
-import { getInjectedProvider } from '../web3-utils'
+import { GU, toEther } from '../utils/utils'
+import { getInjectedProvider } from '../utils/web3-utils'
 
 const AddressWrapper = styled.div`
   width: 100%;
@@ -122,7 +122,7 @@ const Transactions = () => {
             paginatedItems.map(transaction => (
               <TableRow key={transaction.hash}>
                 <TableCell>
-                  <Tag
+                  <TagLink
                     shorten
                     text={transaction.hash}
                     location={`/transaction/${transaction.hash}`}

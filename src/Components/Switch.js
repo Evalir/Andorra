@@ -2,7 +2,7 @@ import React from 'react'
 import { theme } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { GU } from '../utils'
+import { GU } from '../utils/utils'
 
 const StyledSwitch = styled.div`
   height: 20px;
