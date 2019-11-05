@@ -76,17 +76,25 @@ const TransactionCard = ({ transactInfo }) => (
           </Text>
         </div>
         <div className="stat">
-          <Badge>
-            {transactInfo && transactInfo.transactionIndex !== null
-              ? transactInfo.gas === transactInfo.gasPrice
-                ? 'Failed'
-                : 'Success'
-              : 'Pending'}
-          </Badge>
+          {transactInfo && transactInfo.gasPrice ? (
+            <Badge
+              background={theme.badgeInfoBackground}
+              foreground={theme.positive}
+            >
+              Success
+            </Badge>
+          ) : (
+            <Badge
+              background={theme.badgeInfoBackground}
+              foreground={theme.negative}
+            >
+              Pending
+            </Badge>
+          )}
         </div>
         <div className="stat">
           <Text smallcaps color={theme.textSecondary}>
-            Transaction Value
+            Transaction Value (ETH)
           </Text>
         </div>
         <div className="stat">
