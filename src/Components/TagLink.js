@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { shortenAddress, GU } from '../utils'
+import { shortenAddress, GU } from '../utils/utils'
 
 const StyledLink = styled(Link)`
   display: inline-block;
@@ -16,7 +16,7 @@ const StyledLink = styled(Link)`
   font-weight: normal;
 `
 
-const Tag = ({ shorten, text, background = '', location }) => {
+const TagLink = ({ shorten, text, background = '', location }) => {
   let mutatedText = text
   if (shorten) {
     mutatedText = shortenAddress(text)
@@ -28,11 +28,11 @@ const Tag = ({ shorten, text, background = '', location }) => {
   )
 }
 
-Tag.propTypes = {
+TagLink.propTypes = {
   shorten: PropTypes.bool,
   text: PropTypes.string.isRequired,
   background: PropTypes.string,
   location: PropTypes.string.isRequired,
 }
 
-export default Tag
+export default TagLink

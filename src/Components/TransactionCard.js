@@ -13,7 +13,7 @@ import {
 } from '@aragon/ui'
 
 import TransactionPNG from '../assets/transaction@3x.png'
-import { GU, toEther } from '../utils'
+import { GU, toEther } from '../utils/utils'
 import history from '../history'
 
 const CardContent = styled.div`
@@ -42,7 +42,12 @@ const TransactionCard = ({ transactInfo }) => (
     `}
   >
     <CardContent>
-      <img src={TransactionPNG} alt="Blue block" width="64px" height="64px" />
+      <img
+        src={TransactionPNG}
+        alt="Hands with coins floating"
+        width="64px"
+        height="64px"
+      />
       <Text size="large">Transaction Information</Text>
       <TransactionBadge
         transaction={transactInfo && transactInfo.hash}

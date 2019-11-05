@@ -5,7 +5,7 @@ import { IconError, EmptyStateCard } from '@aragon/ui'
 import Web3 from 'web3'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import TransactionCard from '../Components/TransactionCard'
-import { getInjectedProvider } from '../web3-utils'
+import { getInjectedProvider } from '../utils/web3-utils'
 
 const TransactionInfo = () => {
   const [loading, setLoading] = useState(true)

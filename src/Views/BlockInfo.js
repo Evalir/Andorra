@@ -6,7 +6,7 @@ import Web3 from 'web3'
 
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
 import BlockCard from '../Components/BlockCard'
-import { getInjectedProvider } from '../web3-utils'
+import { getInjectedProvider } from '../utils/web3-utils'
 
 const BlockInfo = () => {
   const [loading, setLoading] = useState(false)

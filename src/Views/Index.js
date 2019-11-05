@@ -15,8 +15,8 @@ import { useTransition, animated } from 'react-spring'
 import BlocksTable from '../Components/BlocksTable'
 import Switch from '../Components/Switch'
 import Spinner, { SpinnerWrapper } from '../Components/Spinner'
-import { GU } from '../utils'
-import { getInjectedProvider, fetchBlocks } from '../web3-utils'
+import { GU } from '../utils/utils'
+import { getInjectedProvider, fetchBlocks } from '../utils/web3-utils'
 import history from '../history'
 
 const Wrapper = styled.div`

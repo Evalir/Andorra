@@ -5,7 +5,7 @@ import 'styled-components/macro'
 import { Card, Button, Text, Badge, theme } from '@aragon/ui'
 import BlockPNG from '../assets/block@3x.png'
 import history from '../history'
-import { GU } from '../utils'
+import { GU } from '../utils/utils'
 
 const CardContent = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const BlockCard = ({ blockData }) => (
     <CardContent>
       <img src={BlockPNG} alt="Blue block" width="64px" height="64px" />
       <Text size="large">Block Information</Text>
-      <Badge>{blockData && Number(blockData.number) + 800452}</Badge>
+      <Badge>{blockData && Number(blockData.number)}</Badge>
       <div className="block-stats">
         <div className="stat">
           <Text smallcaps color={theme.textSecondary}>
@@ -54,7 +54,7 @@ const BlockCard = ({ blockData }) => (
               background={theme.badgeInfoBackground}
               foreground={theme.negative}
             >
-              Success
+              Pending
             </Badge>
           )}
         </div>
@@ -98,6 +98,7 @@ const BlockCard = ({ blockData }) => (
         css={`
           margin: ${GU}px 0 0 0;
         `}
+        data-testid="transactions-button"
       >
         See transactions from this block
       </Button>
@@ -108,6 +109,7 @@ const BlockCard = ({ blockData }) => (
         css={`
           margin: ${GU}px 0 0 0;
         `}
+        data-testid="back-button"
       >
         Go Back
       </Button>
@@ -118,7 +120,7 @@ const BlockCard = ({ blockData }) => (
 BlockCard.propTypes = {
   blockData: PropTypes.shape({
     number: PropTypes.number.isRequired,
-    nonce: PropTypes.string.isRequired,
+    nonce: PropTypes.string,
     difficulty: PropTypes.string.isRequired,
     gasUsed: PropTypes.number.isRequired,
     gasLimit: PropTypes.number.isRequired,
