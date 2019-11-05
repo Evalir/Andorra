@@ -95,7 +95,10 @@ const Transactions = () => {
       )
     }
     return (
-      <animated.div style={{ animationProps, width: '95%' }} key={2}>
+      <animated.div
+        style={{ animationProps, width: '95%', marginBottom: `${GU}px` }}
+        key={2}
+      >
         {/* Put stuff here */}
         <div
           css={`
@@ -113,7 +116,7 @@ const Transactions = () => {
           header={
             <TableRow>
               <TableHeader title="Transaction Hash" />
-              <TableHeader title="From / To" />
+              {above(360) && <TableHeader title="From / To" />}
               {above(breakpoints.small) && <TableHeader title="Value in Eth" />}
             </TableRow>
           }
@@ -128,30 +131,46 @@ const Transactions = () => {
                     location={`/transaction/${transaction.hash}`}
                   />
                 </TableCell>
-                <TableCell>
-                  <AddressWrapper>
-                    <div className="trans-details">
-                      <Text smallcaps color={theme.textSecondary} weight="bold">
-                        From
-                      </Text>{' '}
-                      <IdentityBadge
-                        shorten
-                        entity={transaction.from}
-                        fontSize="xxsmall"
-                      />
-                    </div>
-                    <div className="trans-details">
-                      <Text smallcaps color={theme.textSecondary} weight="bold">
-                        To
-                      </Text>{' '}
-                      <IdentityBadge
-                        shorten
-                        entity={transaction.to}
-                        fontSize="xxsmall"
-                      />
-                    </div>
-                  </AddressWrapper>
-                </TableCell>
+                {above(360) && (
+                  <TableCell>
+                    <AddressWrapper>
+                      <div className="trans-details">
+                        <Text
+                          smallcaps
+                          color={theme.textSecondary}
+                          weight="bold"
+                          css={`
+                            margin-right: ${GU / 2}px;
+                          `}
+                        >
+                          From
+                        </Text>{' '}
+                        <IdentityBadge
+                          shorten
+                          entity={transaction.from}
+                          fontSize="xxsmall"
+                        />
+                      </div>
+                      <div className="trans-details">
+                        <Text
+                          smallcaps
+                          color={theme.textSecondary}
+                          weight="bold"
+                          css={`
+                            margin-right: ${GU / 2}px;
+                          `}
+                        >
+                          To
+                        </Text>{' '}
+                        <IdentityBadge
+                          shorten
+                          entity={transaction.to}
+                          fontSize="xxsmall"
+                        />
+                      </div>
+                    </AddressWrapper>
+                  </TableCell>
+                )}
                 {above(breakpoints.small) && (
                   <TableCell>
                     <Text smallcaps>
