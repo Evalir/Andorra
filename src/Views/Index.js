@@ -202,9 +202,10 @@ const Index = () => {
             on={realtime}
           />
         </div>
-        <TextInput
+        <TextInput.Number
           wide
           type="search"
+          placeholder="Search by block number"
           onChange={e => setInputBlockNumber(e.target.value)}
           onKeyDown={e => {
             if (e.keyCode === 13) {
