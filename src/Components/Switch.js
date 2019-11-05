@@ -3,6 +3,7 @@ import { theme } from '@aragon/ui'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { GU } from '../utils'
+
 const StyledSwitch = styled.div`
   height: 20px;
   .switch {
@@ -47,6 +48,7 @@ const Switch = ({ onChange, on }) => (
     <input
       type="checkbox"
       id="toggle"
+      name="toggle"
       className="offscreen"
       onChange={onChange}
       checked={on}
