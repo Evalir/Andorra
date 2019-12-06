@@ -1,6 +1,6 @@
 # Andorra
 Ethereum block and transaction explorer. [See the app](https://andorra.hievalir.now.sh/)
-
+-t
 ## About the App
 Made for the _aragon hiring challenge_, it lets you explore ether transactions and blocks on the ethereum blockchain through these features:
 
