@@ -63,6 +63,7 @@ const Index = () => {
   const { above, breakpoints } = useViewport()
 
   // Fetch the last block number on the blockchain.
+  // note that this may be unstable due to issues with web3.
   const fetchBlockNumber = useCallback(async () => {
     setLoading(true)
     try {
