@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "^0.40.2",
-    "@sentry/browser": "^5.7.1",
+    "@sentry/browser": "^7.119.1",
     "@testing-library/jest-dom": "^4.2.3",
     "@testing-library/react": "^9.3.2",
     "lodash.range": "^3.2.0",
